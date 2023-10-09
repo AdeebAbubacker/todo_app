@@ -10,6 +10,10 @@ part 'completed_state.dart';
 class CompletedBloc
     extends Bloc<CompletedCheckboxChangedEvent, CompletedState> {
   CompletedBloc() : super(CompletedState(List.filled(190, true))) {
+
+
+//--Event------------------------- CompletedCheckboxChangedEvent ----------------------------------------//
+    
     on<CompletedCheckboxChangedEvent>((event, emit) async {
       List<bool> updatedChecked = List.from(state.checked);
 
@@ -18,19 +22,17 @@ class CompletedBloc
 
       // Check if the checkbox state is still true (no user interaction occurred in the meantime)
       if (checkboxState == false) {
-        // Todo todo = boxTodo.getAt(event.index);
         Completed completed = boxCompleted.getAt(event.index);
         if (completed.name == '') {
           boxCompleted.deleteAt(event.index);
-          emit(CompletedState(updatedChecked)); // Emit the updated state
+          emit(CompletedState(updatedChecked)); 
         } else {
           boxTodo.put('key_${completed.name}', Todo(name: completed.name));
-          // boxTodo.add(completedItem); // Add to boxTodo
-          await boxCompleted.deleteAt(event.index); // Delete from boxCompleted
+          await boxCompleted.deleteAt(event.index); 
 
           updatedChecked
-              .removeAt(event.index); // Then remove from updatedChecked
-          emit(CompletedState(updatedChecked)); // Emit the updated state
+              .removeAt(event.index); 
+          emit(CompletedState(updatedChecked)); 
         }
       }
     });

@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:todo_clud/core/adapters/completed/completed.dart';
 import 'package:todo_clud/core/adapters/todo/todo.dart';
 import 'package:todo_clud/core/boxes/boxes_completed.dart';
@@ -15,9 +14,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final TextEditingController titleController;
   TodoBloc({required this.titleController})
       : super(TodoState(List.filled(190, false))) {
+//--1st Event------------------------- AddTodoEventToBoxTodo ----------------------------------------//
+
     on<AddTodoEventToBoxTodo>((event, emit) async {
       List<bool> updatedChecked = List.from(state.checked);
-      String todoTitle = titleController.text;
 
       final todoName = event.todoTitle;
       final uniqueKey = DateTime.now();
@@ -27,72 +27,60 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       if (boxTodo.length == 0 ||
               boxTodo.length <= 1 && boxTodo.getAt(0)?.name?.isEmpty ??
           true) {
+        // put data to hive db
         boxTodo.putAt(
           0,
           Todo(
             name: event.todoTitle,
           ),
         );
+
+        // put data to cloud_firestore
+
         try {
           FirebaseAuth _auth = FirebaseAuth.instance;
           var db = FirebaseFirestore.instance;
-
-          // Your Firestore data to be stored
-          final todoData = {"todo": event.todoTitle};
-
-          // Define the Firestore document reference
           final docRef = db
               .collection("user")
               .doc(_auth.currentUser!.email)
               .collection('todo')
               .doc(boxTodo.length.toString());
-
-          // Set the data to Firestore
           await docRef.set({"todo": event.todoTitle});
-
-          // Emit the updated state if Firestore write is successful
           emit(TodoState(updatedChecked));
         } catch (e) {
-          // Handle any errors here
           print("Error writing document: $e");
         }
 
         emit(TodoState(updatedChecked));
       } else {
-        // Otherwise, add the new text at the end of boxTodo
+        //Add Data to Hive
         boxTodo.put(
           todoKey,
           Todo(
             name: event.todoTitle,
           ),
         );
+
+        // Add Data To Firebase
         try {
           FirebaseAuth _auth = FirebaseAuth.instance;
           var db = FirebaseFirestore.instance;
-
-          // Your Firestore data to be stored
-          final todoData = {"todo": event.todoTitle};
-
-          // Define the Firestore document reference
           final docRef = db
               .collection("user")
               .doc(_auth.currentUser!.email)
               .collection('todo')
               .doc(boxTodo.length.toString());
-
-          // Set the data to Firestore
           await docRef.set({"todo": event.todoTitle});
-
-          // Emit the updated state if Firestore write is successful
           emit(TodoState(updatedChecked));
         } catch (e) {
-          // Handle any errors here
           print("Error writing document: $e");
         }
       }
 
       emit(TodoState(updatedChecked));
     });
+
+//--2nd Event------------------------- DeleteButtonEvent ----------------------------------------//
 
     on<DeleteButtonEvent>((event, emit) async {
       int myindex = event.index; // Get the index from the event
@@ -101,68 +89,57 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       if (myindex >= 0 && myindex < updatedChecked.length) {
         // Check if boxTodo length is greater than 1
         if (boxTodo.length > 1) {
+          //if boxtodo.length greater than 1 we should deleete boxtodo at selected index
           boxTodo.deleteAt(myindex);
-          var check = boxTodo.length;
 
-          try {
-            FirebaseAuth _auth = FirebaseAuth.instance;
-            var db = FirebaseFirestore.instance;
+//---------we tried to delete at index in cloud_firestore but index value not get properly
 
-            // Define the Firestore document reference
-            final docRef = db
-                .collection("user")
-                .doc(_auth.currentUser!.email)
-                .collection('todo')
-                .doc();
-
-            // Set the data to Firestore
-            await docRef.delete();
-
-            // Emit the updated state if Firestore write is successful
-            emit(TodoState(updatedChecked));
-          } catch (e) {
-            // Handle any errors here
-            print("Error writing document: $e");
-          }
+          // try {
+          //   FirebaseAuth _auth = FirebaseAuth.instance;
+          //   var db = FirebaseFirestore.instance;
+          //   final docRef = db
+          //       .collection("user")
+          //       .doc(_auth.currentUser!.email)
+          //       .collection('todo')
+          //       .doc();
+          //   await docRef.delete();
+          //   emit(TodoState(updatedChecked));
+          // } catch (e) {
+          //   print("Error writing document: $e");
+          // }
         } else if (boxTodo.length <= 1) {
+          //as boxtodo.length < = 1 , then we should empty string
           boxTodo.putAt(0, Todo(name: ''));
-          try {
-            FirebaseAuth _auth = FirebaseAuth.instance;
-            var db = FirebaseFirestore.instance;
 
-            // Define the Firestore document reference
-            final docRef = db
-                .collection("user")
-                .doc(_auth.currentUser!.email)
-                .collection('todo')
-                .doc(myindex.toString());
+//---------------------------------- as due to index problem we hault this delete
 
-            // Set the data to Firestore
-            await docRef.delete();
-
-            // Emit the updated state if Firestore write is successful
-            emit(TodoState(updatedChecked));
-          } catch (e) {
-            // Handle any errors here
-            print("Error writing document: $e");
-          }
+          // try {
+          //   FirebaseAuth _auth = FirebaseAuth.instance;
+          //   var db = FirebaseFirestore.instance;
+          //   final docRef = db
+          //       .collection("user")
+          //       .doc(_auth.currentUser!.email)
+          //       .collection('todo')
+          //       .doc(myindex.toString());
+          //   await docRef.delete();
+          //   emit(TodoState(updatedChecked));
+          // } catch (e) {
+          //   print("Error writing document: $e");
+          // }
         }
-
-        // Put an empty string at index 0
-
         updatedChecked[myindex] = event.newState;
-
-        // Emit the updated state with the modified checked list
         emit(TodoState(updatedChecked));
       }
     });
+
+//--3 rd Event------------------------- CheckboxChangedEvent ----------------------------------------//
+
     on<CheckboxChangedEvent>((event, emit) async {
       List<bool> updatedChecked = List.from(state.checked);
 
       updatedChecked[event.index] = event.newState;
       bool checkboxState = updatedChecked[event.index];
 
-      // Check if the checkbox state is still true (no user interaction occurred in the meantime)
       if (checkboxState) {
         Todo todo = boxTodo.getAt(event.index);
         if (boxTodo.length <= 1) {
@@ -178,30 +155,28 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
             updatedChecked[event.index] = false;
             boxTodo.putAt(0, Todo(name: ''));
           }
-          emit(TodoState(updatedChecked)); // Emit the updated state
+          emit(TodoState(updatedChecked));
         } else if (boxTodo.length > 1) {
           // Corrected 'else if'
           if (todo.name == '' && boxTodo.length > 1) {
             boxTodo.deleteAt(event.index);
-            updatedChecked
-                .removeAt(event.index); // Then remove from updatedChecked
-            emit(TodoState(updatedChecked)); // Emit the updated state
+            updatedChecked.removeAt(event.index);
+            emit(TodoState(updatedChecked));
           } else {
             Todo todo = boxTodo.getAt(event.index);
             if (boxTodo.length > 1 && updatedChecked.length > 1) {
               boxCompleted.put('key_${todo.name}', Completed(name: todo.name));
 
-              await boxTodo.deleteAt(event.index); // Delete from boxTodo first
-              updatedChecked
-                  .removeAt(event.index); // Then remove from updatedChecked
-              emit(TodoState(updatedChecked)); // Emit the updated state
+              await boxTodo.deleteAt(event.index);
+              updatedChecked.removeAt(event.index);
+              emit(TodoState(updatedChecked));
             }
 
-            emit(TodoState(updatedChecked)); // Emit the updated state
+            emit(TodoState(updatedChecked));
           }
         }
 
-        emit(TodoState(updatedChecked)); // Emit the updated state
+        emit(TodoState(updatedChecked));
       }
     });
   }

@@ -31,7 +31,8 @@ class NotificationSheet extends StatelessWidget {
               BlocProvider.of<TodoBloc>(context)
                   .add(AddTodoEventToBoxTodo(todoName));
               titlecontroller.clear();
-              Navigator.of(context).pop(); // Close the bottom sheet
+              //close our bottom sheet
+              Navigator.of(context).pop(); 
             },
             child: const Text("Add Todo"),
           ),

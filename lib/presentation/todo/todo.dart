@@ -27,7 +27,7 @@ class _TodoPageState extends State<TodoPage> {
   void updateCheckboxList() {
     checkboxList.clear();
     for (int i = 0; i < boxTodo.length; i++) {
-      checkboxList.add(false); // Initialize with false values
+      checkboxList.add(false); 
     }
   }
 
@@ -62,7 +62,7 @@ class _TodoPageState extends State<TodoPage> {
                             child: ListTile(
                               leading: Checkbox(
                                   value: state.checked[
-                                      index], // Use state.checked[index]
+                                      index], 
                                   onChanged: (value) {
                                     BlocProvider.of<TodoBloc>(context).add(
                                       CheckboxChangedEvent(index, value!, '1'),
