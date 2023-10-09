@@ -42,84 +42,88 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const CircleAvatar(
-                backgroundImage: AssetImage("assets/avatar1.jpg"),
-                radius: 70,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: "Enter e-mail"),
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: "Enter password"),
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              TextField(
-                controller: _passwordconfirmController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: "confirm password"),
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      UserCredential _userregcredntial =
-                          await _auth.createUserWithEmailAndPassword(
-                              email: _emailController.text.toString(),
-                              password: _passwordController.text.toString());
-                      if (_userregcredntial.user != null) {
-                        // Registration successful, navigate to the home page or show success message
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>  TodoPagePage(),
-                          ),
-                        );
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const CircleAvatar(
+                  backgroundImage: AssetImage("assets/avatar1.jpg"),
+                  radius: 70,
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Enter e-mail"),
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "Enter password"),
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                TextField(
+                  controller: _passwordconfirmController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: "confirm password"),
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        UserCredential userregcredntial =
+                            await _auth.createUserWithEmailAndPassword(
+                                email: _emailController.text.toString(),
+                                password: _passwordController.text.toString());
+                        if (userregcredntial.user != null) {
+                          // Registration successful, navigate to the home page or show success message
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  const TodoPagePage(),
+                            ),
+                          );
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'wrong-pasword') {
+                          print("wrong password");
+                        }
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('User already excist')));
                       }
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'wrong-pasword') {
-                        print("wrong password");
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('User already excist')));
-                    }
-                    _handleLogin();
-                  },
-                  child: const Text("Register")),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Do you already have an account?"),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return LoginPage();
-                          },
-                        ));
-                      },
-                      child: Text("login"))
-                ],
-              )
-            ],
+                      _handleLogin();
+                    },
+                    child: const Text("Register")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Do you already have an account?"),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return const LoginPage();
+                            },
+                          ));
+                        },
+                        child: const Text("login"))
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       )),

@@ -43,46 +43,44 @@ class _CompletedPageState extends State<CompletedPage> {
           return SafeArea(
             child: SingleChildScrollView(
               child: Center(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('TodoApp'),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: boxCompleted.length,
-                        itemBuilder: (context, index) {
-                          Completed completed = boxCompleted.getAt(index);
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('TodoApp'),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: boxCompleted.length,
+                      itemBuilder: (context, index) {
+                        Completed completed = boxCompleted.getAt(index);
 
-                         
+                       
 
-                          return Card(
-                            child: ListTile(
-                              leading: Checkbox(
-                                  value: state.checked[
-                                      index], 
-                                  onChanged: (value) {
-                                    setState(() {
-                                      value = false;
-                                    });
-                                    BlocProvider.of<CompletedBloc>(context).add(
-                                      
-                                      CompletedCheckboxChangedEvent(index, value!),
-                                    );
-                                  }),
-                              title: Text(completed.name.toString()),
-                            
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 500,
-                      ),
-                   
-                    ],
-                  ),
+                        return Card(
+                          child: ListTile(
+                            leading: Checkbox(
+                                value: state.checked[
+                                    index], 
+                                onChanged: (value) {
+                                  setState(() {
+                                    value = false;
+                                  });
+                                  BlocProvider.of<CompletedBloc>(context).add(
+                                    
+                                    CompletedCheckboxChangedEvent(index, value!),
+                                  );
+                                }),
+                            title: Text(completed.name.toString()),
+                          
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 500,
+                    ),
+                 
+                  ],
                 ),
               ),
             ),
