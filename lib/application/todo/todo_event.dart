@@ -5,9 +5,8 @@ abstract class TodoEvent {}
 class CheckboxChangedEvent extends TodoEvent {
   final int index;
   final bool newState;
-  final String todoTitle;
 
-  CheckboxChangedEvent(this.index, this.newState, this.todoTitle);
+  CheckboxChangedEvent(this.index, this.newState);
 }
 
 class DeleteButtonEvent extends TodoEvent {

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_clud/auth/register_page.dart';
 import 'package:todo_clud/presentation/homepage/mytodo.dart';
 
 
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
+                              builder: (context) => const RegisterPage(),
                             )),
                         child: const Text("Signup"))
                   ],

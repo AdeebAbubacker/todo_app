@@ -13,21 +13,9 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  List<bool> checkboxList = [];
   final titlecontroller = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    updateCheckboxList();
-  }
 
-  void updateCheckboxList() {
-    checkboxList.clear();
-    for (int i = 0; i < boxTodo.length; i++) {
-      checkboxList.add(false);
-    }
-  }
 
   void clearTextField() {
     titlecontroller.clear();
@@ -58,7 +46,7 @@ class _TodoPageState extends State<TodoPage> {
                                 value: state.checked[index],
                                 onChanged: (value) {
                                   BlocProvider.of<TodoBloc>(context).add(
-                                    CheckboxChangedEvent(index, value!, '1'),
+                                    CheckboxChangedEvent(index, value!),
                                   );
                                 }),
                             title: Text(todo.name.toString()),
@@ -104,10 +92,5 @@ class _TodoPageState extends State<TodoPage> {
         return NotificationSheet();
       },
     );
-
-    // Refresh the list after closing the bottom sheet
-    setState(() {
-      updateCheckboxList();
-    });
   }
 }

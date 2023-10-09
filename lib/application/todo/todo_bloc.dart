@@ -134,50 +134,46 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
 //--3 rd Event------------------------- CheckboxChangedEvent ----------------------------------------//
 
-    on<CheckboxChangedEvent>((event, emit) async {
-      List<bool> updatedChecked = List.from(state.checked);
+on<CheckboxChangedEvent>((event, emit) async {
+  List<bool> updatedChecked = List.from(state.checked);
+  updatedChecked[event.index] = event.newState;
+  bool checkboxState = updatedChecked[event.index];
+  Todo todo = boxTodo.getAt(event.index);
+  
+  if (checkboxState) {
+    emit(TodoState(updatedChecked));
+    await Future.delayed(const Duration(milliseconds: 500));
 
-      updatedChecked[event.index] = event.newState;
-      bool checkboxState = updatedChecked[event.index];
+    updatedChecked[event.index] = false;
 
-      if (checkboxState) {
-        Todo todo = boxTodo.getAt(event.index);
-        if (boxTodo.length <= 1) {
-          updatedChecked[event.index] = false;
-          if (event.index == 0 && boxTodo.length <= 1) {
-            if (todo.name.isNotEmpty) {
-              boxCompleted.put('key', Completed(name: todo.name));
-              boxTodo.putAt(0, Todo(name: ''));
-            }
-          }
-
-          if (todo.name == '' && event.index == 0 && boxTodo.length <= 1) {
-            updatedChecked[event.index] = false;
-            boxTodo.putAt(0, Todo(name: ''));
-          }
-          emit(TodoState(updatedChecked));
-        } else if (boxTodo.length > 1) {
-          // Corrected 'else if'
-          if (todo.name == '' && boxTodo.length > 1) {
-            boxTodo.deleteAt(event.index);
-            updatedChecked.removeAt(event.index);
-            emit(TodoState(updatedChecked));
-          } else {
-            Todo todo = boxTodo.getAt(event.index);
-            if (boxTodo.length > 1 && updatedChecked.length > 1) {
-              boxCompleted.put('key_${todo.name}', Completed(name: todo.name));
-
-              await boxTodo.deleteAt(event.index);
-              updatedChecked.removeAt(event.index);
-              emit(TodoState(updatedChecked));
-            }
-
-            emit(TodoState(updatedChecked));
-          }
-        }
-
+    if (boxTodo.length <= 1) {
+      if (todo.name.isNotEmpty) {
+        boxCompleted.put('key', Completed(name: todo.name));
+        boxTodo.putAt(0, Todo(name: ''));
+      } else if (boxTodo.name == '') {
+        await boxTodo.putAt(0, Todo(name: ''));
         emit(TodoState(updatedChecked));
       }
-    });
+    }
+
+    emit(TodoState(updatedChecked));
+    
+    if (boxTodo.length > 1 && updatedChecked.length > 1 && boxTodo.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      if (todo.name.isNotEmpty) { 
+        boxCompleted.put('key_${todo.name}', Completed(name: todo.name));
+      }
+
+      await boxTodo.deleteAt(event.index);
+      updatedChecked.removeAt(event.index);
+      emit(TodoState(updatedChecked));
+    } else if (boxTodo.name == '' || boxTodo.length > 1) {
+      await boxTodo.deleteAt(event.index);
+      updatedChecked.removeAt(event.index);
+      emit(TodoState(updatedChecked));
+    }
+  }
+});
+
   }
 }
