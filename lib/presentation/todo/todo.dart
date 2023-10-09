@@ -13,7 +13,7 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  List<bool> checkboxList = []; 
+  List<bool> checkboxList = [];
   final titlecontroller = TextEditingController();
 
   @override
@@ -25,14 +25,13 @@ class _TodoPageState extends State<TodoPage> {
   void updateCheckboxList() {
     checkboxList.clear();
     for (int i = 0; i < boxTodo.length; i++) {
-      checkboxList.add(false); 
+      checkboxList.add(false);
     }
   }
 
   void clearTextField() {
     titlecontroller.clear();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class _TodoPageState extends State<TodoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('TodoApp'),
+                    const Text('Things to do'),
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -53,13 +52,10 @@ class _TodoPageState extends State<TodoPage> {
                       itemBuilder: (context, index) {
                         Todo todo = boxTodo.getAt(index);
 
-                  
-
                         return Card(
                           child: ListTile(
                             leading: Checkbox(
-                                value: state.checked[
-                                    index], 
+                                value: state.checked[index],
                                 onChanged: (value) {
                                   BlocProvider.of<TodoBloc>(context).add(
                                     CheckboxChangedEvent(index, value!, '1'),
@@ -80,16 +76,17 @@ class _TodoPageState extends State<TodoPage> {
                       },
                     ),
                     const SizedBox(
-                      height: 500,
+                      height: 200,
                     ),
                     ElevatedButton(
                       onPressed: () {
                         _showNotificationSheet(context);
-
-     
                       },
                       child: const Text('Add To Dos'),
                     ),
+                    SizedBox(
+                      height: 200,
+                    )
                   ],
                 ),
               ),
