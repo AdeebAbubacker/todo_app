@@ -7,75 +7,6 @@ import 'package:todo_clud/core/boxes/boxes_todo.dart';
 
 
 
-
-// class CompletedPage extends StatefulWidget {
-//   const CompletedPage({Key? key}) : super(key: key);
-
-//   @override
-//   State<CompletedPage> createState() => _CompletedPageState();
-// }
-
-// class _CompletedPageState extends State<CompletedPage> {
-//   List<bool> checkboxList = []; // Use an empty list initially
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     updateCheckboxList();
-//   }
-
-//   void updateCheckboxList() {
-//     checkboxList.clear();
-//     for (int i = 0; i < boxCompleted.length; i++) {
-//       checkboxList.add(true); // Initialize with false values
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SafeArea(
-//         child: Column(
-//           children: [
-//             Text('CompletedPage'),
-//             ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: boxCompleted.length,
-//               itemBuilder: (context, index) {
-//                 Completed completed = boxCompleted.getAt(index);
-//                 return Card(
-//                   child: ListTile(
-//                     leading: Checkbox(
-//                         value: checkboxList[index],
-//                         onChanged: (value) {
-//                           setState(() {
-//                             checkboxList[index] = value!;
-//                           });
-
-//                           if (!checkboxList[index]) {
-//                             Future.delayed(Duration(seconds: 1), () {
-//                               setState(() {
-//                                 boxTodo.put('key_${completed.name}',
-//                                     Todo(name: completed.name));
-
-//                                 boxCompleted.deleteAt(index);
-//                                 updateCheckboxList();
-//                               });
-//                             });
-//                           }
-//                         }),
-//                     title: Text(completed.name.toString()),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class CompletedPage extends StatefulWidget {
   const CompletedPage({Key? key}) : super(key: key);
 
@@ -84,8 +15,8 @@ class CompletedPage extends StatefulWidget {
 }
 
 class _CompletedPageState extends State<CompletedPage> {
-  List<bool> checkboxList = []; // Use an empty list initially
-  final titlecontroller = TextEditingController(); // Add this line
+  List<bool> checkboxList = []; 
+  final titlecontroller = TextEditingController(); 
 
   @override
   void initState() {
@@ -96,7 +27,7 @@ class _CompletedPageState extends State<CompletedPage> {
   void updateCheckboxList() {
     checkboxList.clear();
     for (int i = 0; i < boxTodo.length; i++) {
-      checkboxList.add(false); // Initialize with false values
+      checkboxList.add(false); 
     }
   }
 
@@ -124,13 +55,13 @@ class _CompletedPageState extends State<CompletedPage> {
                         itemBuilder: (context, index) {
                           Completed completed = boxCompleted.getAt(index);
 
-                          // Ensure that index is within the bounds of state.checkboxList
+                         
 
                           return Card(
                             child: ListTile(
                               leading: Checkbox(
                                   value: state.checked[
-                                      index], // Use state.checked[index]
+                                      index], 
                                   onChanged: (value) {
                                     setState(() {
                                       value = false;
