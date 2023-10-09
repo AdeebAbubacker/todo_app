@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_clud/application/todo/todo_bloc.dart';
@@ -15,8 +13,8 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  List<bool> checkboxList = []; // Use an empty list initially
-  final titlecontroller = TextEditingController(); // Add this line
+  List<bool> checkboxList = []; 
+  final titlecontroller = TextEditingController();
 
   @override
   void initState() {
@@ -44,57 +42,55 @@ class _TodoPageState extends State<TodoPage> {
           return SafeArea(
             child: SingleChildScrollView(
               child: Center(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('TodoApp'),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: boxTodo.length,
-                        itemBuilder: (context, index) {
-                          Todo todo = boxTodo.getAt(index);
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('TodoApp'),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: boxTodo.length,
+                      itemBuilder: (context, index) {
+                        Todo todo = boxTodo.getAt(index);
 
-                          // Ensure that index is within the bounds of state.checkboxList
+                  
 
-                          return Card(
-                            child: ListTile(
-                              leading: Checkbox(
-                                  value: state.checked[
-                                      index], 
-                                  onChanged: (value) {
-                                    BlocProvider.of<TodoBloc>(context).add(
-                                      CheckboxChangedEvent(index, value!, '1'),
-                                    );
-                                  }),
-                              title: Text(todo.name.toString()),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
+                        return Card(
+                          child: ListTile(
+                            leading: Checkbox(
+                                value: state.checked[
+                                    index], 
+                                onChanged: (value) {
                                   BlocProvider.of<TodoBloc>(context).add(
-                                    DeleteButtonEvent(
-                                        index, state.checked[index]),
+                                    CheckboxChangedEvent(index, value!, '1'),
                                   );
-                                },
-                              ),
+                                }),
+                            title: Text(todo.name.toString()),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                BlocProvider.of<TodoBloc>(context).add(
+                                  DeleteButtonEvent(
+                                      index, state.checked[index]),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 500,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _showNotificationSheet(context);
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 500,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showNotificationSheet(context);
 
      
-                        },
-                        child: const Text('Add To Dos'),
-                      ),
-                    ],
-                  ),
+                      },
+                      child: const Text('Add To Dos'),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,16 +1,9 @@
-// import 'dart:html';
-
-// import 'package:firebase_demo/pages/register_page.dart';
-// import 'package:flutter/foundation.dart';
-
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:todo_clud/auth/register_page.dart';
-import 'package:todo_clud/presentation/completed/completed.dart';
 import 'package:todo_clud/presentation/homepage/mytodo.dart';
-import 'package:todo_clud/presentation/todo/todo.dart';
+
 
 
 
@@ -22,25 +15,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var _emailController = TextEditingController();
+  final _emailController = TextEditingController();
 
-  var _passwordController = TextEditingController();
+  final _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   handleLogin() async {
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Enter Username")));
+          .showSnackBar(const SnackBar(content: Text("Enter Username")));
       return;
     }
     if (_passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Enter Password")));
+          .showSnackBar(const SnackBar(content: Text("Enter Password")));
       return;
     }
     if (_passwordController.text.length < 7) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("password length must be 7 character")));
+          const SnackBar(content: Text("password length must be 7 character")));
       return;
     }
   }
@@ -81,34 +74,35 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(
                         child: ElevatedButton(
                             onPressed: () async {
-                              UserCredential _userdential =
+                              UserCredential userdential =
                                   await _auth.signInWithEmailAndPassword(
                                       email: _emailController.text.toString(),
                                       password:
                                           _passwordController.text.toString());
-                              if (_userdential.user != null) {
+                              if (userdential.user != null) {
+                                // ignore: use_build_context_synchronously
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => TodoPagePage(),
+                                      builder: (context) => const TodoPagePage(),
                                     ));
                               }
                               handleLogin;
                             },
-                            child: Text("Login"))),
+                            child: const Text("Login"))),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("If you don't have an account"),
+                    const Text("If you don't have an account"),
                     TextButton(
                         onPressed: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>RegisterPage(),
+                              builder: (context) =>const RegisterPage(),
                             )),
-                        child: Text("Signup"))
+                        child: const Text("Signup"))
                   ],
                 ),
               ],

@@ -1,8 +1,5 @@
-// import 'package:flutter/foundation.dart';
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:todo_clud/auth/login.dart';
 import 'package:todo_clud/presentation/homepage/mytodo.dart';
@@ -32,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/ecommercelogo.jpg"),
+            Image.asset("assets/todo.png"),
             const Text("Loading please wait...")
           ],
         ),
@@ -46,13 +43,13 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TodoPagePage(),
+            builder: (context) => const TodoPagePage(),
           ));
     } else {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginPage(),
+            builder: (context) => const LoginPage(),
           ));
     }
   }
