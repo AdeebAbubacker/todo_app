@@ -5,8 +5,6 @@ import 'package:todo_clud/core/adapters/completed/completed.dart';
 import 'package:todo_clud/core/boxes/boxes_completed.dart';
 import 'package:todo_clud/core/boxes/boxes_todo.dart';
 
-
-
 class CompletedPage extends StatefulWidget {
   const CompletedPage({Key? key}) : super(key: key);
 
@@ -15,8 +13,8 @@ class CompletedPage extends StatefulWidget {
 }
 
 class _CompletedPageState extends State<CompletedPage> {
-  List<bool> checkboxList = []; 
-  final titlecontroller = TextEditingController(); 
+  List<bool> checkboxList = [];
+  final titlecontroller = TextEditingController();
 
   @override
   void initState() {
@@ -27,7 +25,7 @@ class _CompletedPageState extends State<CompletedPage> {
   void updateCheckboxList() {
     checkboxList.clear();
     for (int i = 0; i < boxTodo.length; i++) {
-      checkboxList.add(false); 
+      checkboxList.add(false);
     }
   }
 
@@ -46,7 +44,7 @@ class _CompletedPageState extends State<CompletedPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('TodoApp'),
+                    const Text('Your completed list'),
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -54,24 +52,20 @@ class _CompletedPageState extends State<CompletedPage> {
                       itemBuilder: (context, index) {
                         Completed completed = boxCompleted.getAt(index);
 
-                       
-
                         return Card(
                           child: ListTile(
                             leading: Checkbox(
-                                value: state.checked[
-                                    index], 
+                                value: state.checked[index],
                                 onChanged: (value) {
                                   setState(() {
                                     value = false;
                                   });
                                   BlocProvider.of<CompletedBloc>(context).add(
-                                    
-                                    CompletedCheckboxChangedEvent(index, value!),
+                                    CompletedCheckboxChangedEvent(
+                                        index, value!),
                                   );
                                 }),
                             title: Text(completed.name.toString()),
-                          
                           ),
                         );
                       },
@@ -79,7 +73,6 @@ class _CompletedPageState extends State<CompletedPage> {
                     const SizedBox(
                       height: 500,
                     ),
-                 
                   ],
                 ),
               ),
@@ -89,6 +82,4 @@ class _CompletedPageState extends State<CompletedPage> {
       ),
     );
   }
-
-
 }
